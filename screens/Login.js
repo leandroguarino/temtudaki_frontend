@@ -17,6 +17,10 @@ export default function Login({navigation}) {
     })
   }
 
+  const cadastrar = () => {
+    navigation.navigate("Cadastro")
+  }
+
   return (
     <View style={[styles.container, specificStyle.specificContainer]}>
       <Text h3>Entre no TemTudaki</Text>
@@ -42,7 +46,21 @@ export default function Login({navigation}) {
           />
         }
         title="Entrar"
+        buttonStyle={specificStyle.button}
         onPress={() => entrar()}
+      />
+
+      <Button
+        icon={
+          <Icon
+            name="user"
+            size={15}
+            color="white"
+          />
+        }
+        title=" Cadastrar"
+        buttonStyle={specificStyle.button}
+        onPress={() => cadastrar()}
       />
 
     </View>
@@ -52,5 +70,9 @@ export default function Login({navigation}) {
 const specificStyle = StyleSheet.create({
   specificContainer: {
     backgroundColor: "#fff"
+  },
+  button: {
+    width: "100%",
+    marginTop: 10
   }
 })
