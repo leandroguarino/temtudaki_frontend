@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+import { Platform } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native';
 import { StyleSheet, View } from 'react-native';
 import { Button, CheckBox, Input, Text } from 'react-native-elements';
+import { ScrollView } from 'react-native-gesture-handler';
+import { TextInputMask } from 'react-native-masked-text';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../style/MainStyle';
 
@@ -16,6 +20,9 @@ export default function Cadastro({navigation}) {
   const [errorNome, setErrorNome] = useState(null)
   const [errorCpf, setErrorCpf] = useState(null)
   const [errorTelefone, setErrorTelefone] = useState(null)
+
+  let cpfField = null
+  let telefoneField = null
   
   const validar = () => {
     let error = false
@@ -27,8 +34,12 @@ export default function Cadastro({navigation}) {
       setErrorEmail("Preencha seu e-mail corretamente")
       error = true
     }
-    if (cpf == null){
-      setErrorCpf("Preencha seu CPF")
+    if (!cpfField.isValid()){
+      setErrorCpf("Preencha seu CPF corretamente")
+      error = true
+    }
+    if (telefone == null){
+      setErrorTelefone("Preencha seu telefone corretamente")
       error = true
     }
     return !error
@@ -41,7 +52,11 @@ export default function Cadastro({navigation}) {
   }
 
   return (
-    <View style={[styles.container, specificStyle.specificContainer]}>
+    <KeyboardAvoidingView
+    behavior={Platform.OS == "ios" ? "padding" : "height"}
+    style={[styles.container, specificStyle.specificContainer]}
+    keyboardVerticalOffset={80}>
+      <ScrollView style={{width: "100%"}}>
       <Text h3>Cadastre-se</Text>
       <Input
         placeholder="E-mail"
@@ -60,24 +75,69 @@ export default function Cadastro({navigation}) {
         />
     
     <Input
-        placeholder="CPF"
-        onChangeText={value => {
-            setCpf(value)
-            setErrorCpf(null)
-        }}
-        keyboardType="number-pad"
-        returnKeyType="done"
-        errorMessage={errorCpf}
+        placeholder="Nome"
+        onChangeText={value => setNome(value)}
+        errorMessage={errorNome}
         />
     
     <Input
-        placeholder="Telefone"
-        onChangeText={value => setTelefone(value)}
-        keyboardType="phone-pad"
-        returnKeyType="done"
-        errorMessage={errorTelefone}
+        placeholder="Nome"
+        onChangeText={value => setNome(value)}
+        errorMessage={errorNome}
         />
-        
+
+<Input
+        placeholder="Nome"
+        onChangeText={value => setNome(value)}
+        errorMessage={errorNome}
+        />
+
+<Input
+        placeholder="Nome"
+        onChangeText={value => setNome(value)}
+        errorMessage={errorNome}
+        />
+    
+    <View style={styles.containerMask}>
+    <TextInputMask
+      placeholder="CPF"
+      type={'cpf'}
+      value={cpf}
+      onChangeText={value => {
+        setCpf(value)
+        setErrorCpf(null)
+      }}
+      keyboardType="number-pad"
+      returnKeyType="done"      
+      style={styles.maskedInput}
+      ref={(ref) => cpfField = ref}
+      />      
+    </View>
+    <Text style={styles.errorMessage}>{errorCpf}</Text>
+
+    <View style={styles.containerMask}>
+    <TextInputMask
+      placeholder="Telefone"
+      type={'cel-phone'}
+      options={{
+        maskType: 'BRL',
+        withDDD: true,
+        dddMask: '(99) '
+      }}
+      value={telefone}
+      onChangeText={value => {
+          setTelefone(value)
+          setErrorTelefone(null)
+        }
+      }
+      keyboardType="phone-pad"  
+      returnKeyType="done"    
+      style={styles.maskedInput}
+      ref={(ref) => telefoneField = ref}
+      />      
+    </View>
+    <Text style={styles.errorMessage}>{errorTelefone}</Text>
+            
     <CheckBox 
         title="Eu aceito os termos de uso"
         checkedIcon="check"
@@ -100,14 +160,15 @@ export default function Cadastro({navigation}) {
         buttonStyle={specificStyle.button}
         onPress={() => salvar()}
       />
-
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const specificStyle = StyleSheet.create({
   specificContainer: {
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
+    padding: 10
   },
   button: {
     width: "100%",
