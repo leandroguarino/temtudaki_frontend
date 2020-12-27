@@ -6,6 +6,7 @@ import { Button, CheckBox, Input, Text } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import { TextInputMask } from 'react-native-masked-text';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import usuarioService from '../services/UsuarioService';
 import styles from '../style/MainStyle';
 
 
@@ -20,6 +21,7 @@ export default function Cadastro({navigation}) {
   const [errorNome, setErrorNome] = useState(null)
   const [errorCpf, setErrorCpf] = useState(null)
   const [errorTelefone, setErrorTelefone] = useState(null)
+  const [isLoading, setLoading] = useState(false)
 
   let cpfField = null
   let telefoneField = null
@@ -47,7 +49,25 @@ export default function Cadastro({navigation}) {
 
   const salvar = () => {
       if (validar()){
-        console.log("Salvou")      
+        setLoading(true)
+        
+        let data = {
+          email: email,
+          cpf: cpf,
+          nome: nome,
+          telefone: telefone
+        }
+        
+        usuarioService.cadastrar(data)
+        .then((response) => {
+          setLoading(false)
+          console.log(response.data)
+        })
+        .catch((error) => {
+          setLoading(false)
+          console.log(error)
+          console.log("Deu erro")
+        })
       }
   }
 
@@ -68,30 +88,6 @@ export default function Cadastro({navigation}) {
         errorMessage={errorEmail}        
         />
     
-    <Input
-        placeholder="Nome"
-        onChangeText={value => setNome(value)}
-        errorMessage={errorNome}
-        />
-    
-    <Input
-        placeholder="Nome"
-        onChangeText={value => setNome(value)}
-        errorMessage={errorNome}
-        />
-    
-    <Input
-        placeholder="Nome"
-        onChangeText={value => setNome(value)}
-        errorMessage={errorNome}
-        />
-
-<Input
-        placeholder="Nome"
-        onChangeText={value => setNome(value)}
-        errorMessage={errorNome}
-        />
-
 <Input
         placeholder="Nome"
         onChangeText={value => setNome(value)}
@@ -147,7 +143,12 @@ export default function Cadastro({navigation}) {
         checked={isSelected}
         onPress={() => setSelected(!isSelected)}
     />
-     
+    
+    { isLoading && 
+      <Text>Carregando...</Text>
+    }
+
+    { !isLoading && 
       <Button
         icon={
           <Icon
@@ -160,6 +161,7 @@ export default function Cadastro({navigation}) {
         buttonStyle={specificStyle.button}
         onPress={() => salvar()}
       />
+    }
       </ScrollView>
     </KeyboardAvoidingView>
   );
