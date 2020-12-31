@@ -15,12 +15,14 @@ export default function Cadastro({navigation}) {
   const [email, setEmail] = useState(null)
   const [nome, setNome] = useState(null)
   const [cpf, setCpf] = useState(null)
+  const [senha, setSenha] = useState(null)
   const [telefone, setTelefone] = useState(null)
   const [isSelected, setSelected] = useState(false)
   const [errorEmail, setErrorEmail] = useState(null)
   const [errorNome, setErrorNome] = useState(null)
   const [errorCpf, setErrorCpf] = useState(null)
   const [errorTelefone, setErrorTelefone] = useState(null)
+  const [errorSenha, setErrorSenha] = useState(null)
   const [isLoading, setLoading] = useState(false)
 
   let cpfField = null
@@ -30,6 +32,7 @@ export default function Cadastro({navigation}) {
     let error = false
     setErrorEmail(null)
     setErrorCpf(null)
+    setErrorSenha(null)
     
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     if (!re.test(String(email).toLowerCase())){
@@ -44,6 +47,10 @@ export default function Cadastro({navigation}) {
       setErrorTelefone("Preencha seu telefone corretamente")
       error = true
     }
+    if (senha == null){
+      setErrorSenha("Preencha a senha")
+      error = true
+    }
     return !error
   }
 
@@ -55,7 +62,8 @@ export default function Cadastro({navigation}) {
           email: email,
           cpf: cpf,
           nome: nome,
-          telefone: telefone
+          telefone: telefone,
+          senha: senha
         }
         
         usuarioService.cadastrar(data)
@@ -133,6 +141,13 @@ export default function Cadastro({navigation}) {
       />      
     </View>
     <Text style={styles.errorMessage}>{errorTelefone}</Text>
+
+    <Input
+        placeholder="Senha"
+        onChangeText={value => setSenha(value)}
+        errorMessage={errorSenha}
+        secureTextEntry={true}
+        />
             
     <CheckBox 
         title="Eu aceito os termos de uso"
