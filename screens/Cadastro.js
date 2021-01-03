@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { Alert } from 'react-native';
 import { Platform } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native';
 import { StyleSheet, View } from 'react-native';
 import { Button, CheckBox, Input, Text } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import { TextInputMask } from 'react-native-masked-text';
+import { Button as PaperButton, Provider, Dialog, Paragraph, Portal } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import usuarioService from '../services/UsuarioService';
 import styles from '../style/MainStyle';
@@ -24,6 +26,12 @@ export default function Cadastro({navigation}) {
   const [errorTelefone, setErrorTelefone] = useState(null)
   const [errorSenha, setErrorSenha] = useState(null)
   const [isLoading, setLoading] = useState(false)
+
+  const [visible, setVisible] = useState(false);
+  const showDialog = () => setVisible(true);
+  const hideDialog = () => setVisible(false);
+  const [titulo, setTitulo] = useState(null)
+  const [mensagem, setMensagem] = useState(null)
 
   let cpfField = null
   let telefoneField = null
@@ -69,12 +77,17 @@ export default function Cadastro({navigation}) {
         usuarioService.cadastrar(data)
         .then((response) => {
           setLoading(false)
-          console.log(response.data)
+          const titulo = (response.data.status) ? "Sucesso" : "Erro"
+          setTitulo(titulo)
+          setMensagem(response.data.mensagem)
+          //Alert.alert(titulo, response.data.mensagem)
+          showDialog()
         })
         .catch((error) => {
           setLoading(false)
-          console.log(error)
-          console.log("Deu erro")
+          setTitulo("Erro")
+          setMensagem("Houve um erro inesperado")
+          //Alert.alert("Erro", "Houve um erro inesperado")
         })
       }
   }
@@ -177,6 +190,20 @@ export default function Cadastro({navigation}) {
         onPress={() => salvar()}
       />
     }
+    <Provider>
+    <Portal>
+        <Dialog visible={visible} onDismiss={hideDialog}>
+          <Dialog.Title>{titulo}</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>{mensagem}</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <PaperButton onPress={hideDialog}>Done</PaperButton>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+      </Provider>
+
       </ScrollView>
     </KeyboardAvoidingView>
   );
