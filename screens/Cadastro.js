@@ -8,6 +8,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { TextInputMask } from 'react-native-masked-text';
 import { Button as PaperButton, Provider, Dialog, Paragraph, Portal } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import CustomDialog from '../components/CustomDialog';
 import usuarioService from '../services/UsuarioService';
 import styles from '../style/MainStyle';
 
@@ -27,14 +28,24 @@ export default function Cadastro({navigation}) {
   const [errorSenha, setErrorSenha] = useState(null)
   const [isLoading, setLoading] = useState(false)
 
-  const [visible, setVisible] = useState(false);
-  const showDialog = () => setVisible(true);
-  const hideDialog = () => setVisible(false);
+  const [visibleDialog, setVisibleDialog] = useState(false);
   const [titulo, setTitulo] = useState(null)
   const [mensagem, setMensagem] = useState(null)
+  const [tipo, setTipo] = useState(null)
 
   let cpfField = null
   let telefoneField = null
+
+  const showDialog = (titulo, mensagem, tipo) => {
+    setVisibleDialog(true)
+    setTitulo(titulo)
+    setMensagem(mensagem)
+    setTipo(tipo)
+  }
+
+  const hideDialog = (status) => {
+    setVisibleDialog(status)
+  }
   
   const validar = () => {
     let error = false
@@ -78,15 +89,12 @@ export default function Cadastro({navigation}) {
         .then((response) => {
           setLoading(false)
           const titulo = (response.data.status) ? "Sucesso" : "Erro"
-          setTitulo(titulo)
-          setMensagem(response.data.mensagem)
-          //Alert.alert(titulo, response.data.mensagem)
-          showDialog()
+          showDialog(titulo, response.data.mensagem, "SUCESSO")
+          //Alert.alert(titulo, response.data.mensagem)          
         })
         .catch((error) => {
           setLoading(false)
-          setTitulo("Erro")
-          setMensagem("Houve um erro inesperado")
+          showDialog("Erro","Houve um erro inesperado", "ERRO")
           //Alert.alert("Erro", "Houve um erro inesperado")
         })
       }
@@ -190,19 +198,10 @@ export default function Cadastro({navigation}) {
         onPress={() => salvar()}
       />
     }
-    <Provider>
-    <Portal>
-        <Dialog visible={visible} onDismiss={hideDialog}>
-          <Dialog.Title>{titulo}</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph>{mensagem}</Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <PaperButton onPress={hideDialog}>Done</PaperButton>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
-      </Provider>
+
+    { visibleDialog && 
+      <CustomDialog titulo={titulo} mensagem={mensagem} tipo={tipo} visible={visibleDialog} onClose={hideDialog}></CustomDialog>
+    }
 
       </ScrollView>
     </KeyboardAvoidingView>
