@@ -1,91 +1,69 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Button } from 'react-native-elements';
-import { AsyncStorage } from 'react-native';
-
-function Feed() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Feed!</Text>
-    </View>
-  );
-}
-
-const logout = (navigation) => {
-  AsyncStorage.removeItem("TOKEN")
-  navigation.reset({
-    index: 0,
-    routes: [{name: "Login"}]
-  })
-}
-
-function Profile({navigation}) {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Profile!</Text>
-      <Button
-          icon={
-            <Icon
-              name="check"
-              size={15}
-              color="white"
-            />
-          }
-          title="Sair"
-          onPress={() => logout(navigation)}
-        />
-    </View>
-  );
-}
-
-function Notifications() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Notifications!</Text>
-    </View>
-  );
-}
+import Perfil from './Perfil';
+import Busca from './Busca';
+import Produtos from './Produtos';
+import Servicos from './Servicos';
+import Cadastrar from './Cadastrar';
 
 const Tab = createBottomTabNavigator();
 
 export default function Principal() {
   return (
     <Tab.Navigator
-      initialRouteName="Feed"
+      initialRouteName="Busca"
       tabBarOptions={{
         activeTintColor: '#e91e63',
       }}
     >
       <Tab.Screen
-        name="Feed"
-        component={Feed}
+        name="Busca"
+        component={Busca}
         options={{
-          tabBarLabel: 'Home',
+          tabBarLabel: 'Buscar',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
+            <MaterialCommunityIcons name="account-search" color={color} size={size} />
           ),
         }}
       />
       <Tab.Screen
-        name="Notifications"
-        component={Notifications}
+        name="Produtos"
+        component={Produtos}
         options={{
-          tabBarLabel: 'Updates',
+          tabBarLabel: 'Produtos',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="bell" color={color} size={size} />
+            <MaterialCommunityIcons name="shopping" color={color} size={size} />
           ),
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={Profile}
+        name="Serviços"
+        component={Servicos}
         options={{
-          tabBarLabel: 'Profile',
+          tabBarLabel: 'Serviços',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="human-greeting" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Cadastrar"
+        component={Cadastrar}
+        options={{
+          tabBarLabel: 'Cadastrar',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="plus-circle" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Perfil"
+        component={Perfil}
+        options={{
+          tabBarLabel: 'Perfil',
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account" color={color} size={size} />
           ),
