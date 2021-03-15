@@ -8,6 +8,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import Login from './screens/Login';
 import Principal from './screens/Principal';
 import Cadastro from './screens/Cadastro';
+import CadastroProduto from './screens/CadastroProduto';
+import CadastroServico from './screens/CadastroServico';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +19,8 @@ function MyStack() {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Principal" component={Principal} />
       <Stack.Screen name="Cadastro" component={Cadastro} />
+      <Stack.Screen name="CadastroProduto" component={CadastroProduto} />
+      <Stack.Screen name="CadastroServico" component={CadastroServico} />
     </Stack.Navigator>
   );
 }

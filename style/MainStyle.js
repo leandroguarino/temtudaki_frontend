@@ -1,5 +1,12 @@
 import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
+    button: {
+      width: "100%",
+      marginTop: 10
+    },  
+    cancelButton: {
+      backgroundColor: "#c00"
+    },
     container: {
       flex: 1,
       backgroundColor: '#ccc',
